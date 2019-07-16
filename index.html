@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="scaling-text.js"></script>
+</head>
+<body>
+  <style>
+    #non-scaling-text-div,
+    #scaling-text-canvas {
+      outline: 1px solid black;
+    }
+    #non-scaling-text-div {
+      width: 150px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      box-sizing: border-box;
+      font-family: 'Roboto Condensed';
+      font-size: 16px;
+      overflow: hidden;
+    }
+    .space {
+      margin: 2rem 0;
+    }
+    #text-input {
+      width: 150px;
+      height: 150px;
+    }
+    strong {
+      display: block;
+    }
+  </style>
+  <div class="space">
+    <strong>Scaling Text Canvas</strong>
+    <p>The text will scale it's size to fit within the bounds of the canvas.</p>
+    <canvas id="scaling-text-canvas" width="150px" height="100px" role="img" aria-label=""></canvas>
+  </div>
+  <div class="space">
+    <strong>Standard Div</strong>
+    <p>The equivalent in a div for comparison. This will not scale, but overflow.</p>
+    <div id="non-scaling-text-div">The quick brown fox jumps over the lazy dog. </div>
+  </div>
+  <div class="space">
+    <strong>Testing Controls</strong>
+    <p>Add some text in to test this.</p>
+    <div><textarea id="text-input" type="text" value="hey">The quick brown fox jumps over the lazy dog. </textarea></div>
+    <div><button id="text-button">Add more text</button></div>
+    <label>
+      <input id="debug-checkbox" type="checkbox" />
+      <span>Show debugging</span>
+    </label>
+  </div>
+  <script>
+    const textInputField = document.getElementById('text-input')
+    const nonScalingText = document.getElementById('non-scaling-text-div')
+    const scalingText = new ScalingText(document.getElementById("scaling-text-canvas"))
+
+    // Set some scaling text defaults.
+    scalingText.setSize(150, 100, window.devicePixelRatio)
+    scalingText.setFont(16, 'Roboto Condensed', '#000', 3)
+    scalingText.setText(textInputField.value)
+
+    // Add some input controls for testing scaling.
+    textInputField.addEventListener('keyup', (e) => {
+      scalingText.setText(e.target.value)
+      nonScalingText.innerHTML = e.target.value
+    })
+    document.getElementById('text-button').addEventListener('click', () => {
+      textInputField.value = textInputField.value + 'Officia minim deserunt culpa id in ex sint officia quis commodo sunt reprehenderit'
+      scalingText.setText(textInputField.value)
+      nonScalingText.innerHTML = textInputField.value
+    })
+    document.getElementById('debug-checkbox').addEventListener('change', (e) => {
+      scalingText.setDebug(e.target.checked)
+    })
+  </script>
+</body>
+</html>
